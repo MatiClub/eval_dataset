@@ -34,6 +34,31 @@ def _display_path(path: Path, workspace_root: Path) -> str:
         return path.as_posix()
 
 
+def _clean_optional_text(value: Any) -> str:
+    if value is None:
+        return ""
+    try:
+        if pd.isna(value):
+            return ""
+    except Exception:
+        pass
+
+    text = str(value).strip()
+    if not text:
+        return ""
+    if text.lower() in {"nan", "none", "null"}:
+        return ""
+    return text
+
+
+def _first_non_empty_text(*values: Any) -> str:
+    for value in values:
+        text = _clean_optional_text(value)
+        if text:
+            return text
+    return ""
+
+
 def _detect_run_ids(workspace_root: Path) -> list[str]:
     root = (workspace_root / EMBEDDINGS_DIR).resolve()
     if not root.exists():
@@ -113,25 +138,82 @@ def _load_manifest(manifest_path: Path, workspace_root: Path) -> tuple[Path, Pat
     payload = json.loads(manifest_path.read_text(encoding="utf-8"))
     outputs = payload.get("outputs", {}) if isinstance(payload.get("outputs"), dict) else {}
 
-    docs = outputs.get("doc_vectors_parquet") or outputs.get("doc_vectors_jsonl")
-    queries = outputs.get("query_vectors_parquet") or outputs.get("query_vectors_jsonl")
+    def _first_existing_output_path(keys: list[str]) -> Path | None:
+        fallback: Path | None = None
+        for key in keys:
+            raw = outputs.get(key)
+            if not raw:
+                continue
+            resolved = _resolve_from_workspace(str(raw), workspace_root)
+            if resolved is None:
+                continue
+            if fallback is None:
+                fallback = resolved
+            if resolved.exists():
+                return resolved
+        return fallback
 
-    if not docs or not queries:
+    docs_path = _first_existing_output_path(
+        [
+            "doc_vectors_parquet",
+            "doc_vectors_jsonl",
+            "doc_desc_vectors_parquet",
+            "doc_desc_vectors_jsonl",
+        ]
+    )
+    queries_path = _first_existing_output_path(
+        [
+            "query_vectors_parquet",
+            "query_vectors_jsonl",
+            "query_desc_vectors_parquet",
+            "query_desc_vectors_jsonl",
+        ]
+    )
+
+    if docs_path is None or queries_path is None:
         raise ValueError(
             "Run manifest is missing required vector outputs. "
-            "Expected outputs.doc_vectors_parquet/jsonl and outputs.query_vectors_parquet/jsonl."
+            "Expected one of outputs.doc_vectors_* or outputs.doc_desc_vectors_*, "
+            "and one of outputs.query_vectors_* or outputs.query_desc_vectors_*."
         )
-
-    docs_path = _resolve_from_workspace(str(docs), workspace_root)
-    queries_path = _resolve_from_workspace(str(queries), workspace_root)
-    if docs_path is None or queries_path is None:
-        raise ValueError("Failed to resolve docs/queries paths from run manifest")
 
     if not docs_path.exists() or not queries_path.exists():
         raise FileNotFoundError(
             f"Resolved vectors not found. docs={docs_path}, queries={queries_path}"
         )
     return docs_path, queries_path
+
+
+def _load_doc_descriptions_from_manifest(
+    manifest_path: Path,
+    workspace_root: Path,
+) -> pd.DataFrame | None:
+    payload = json.loads(manifest_path.read_text(encoding="utf-8"))
+    outputs = payload.get("outputs", {}) if isinstance(payload.get("outputs"), dict) else {}
+
+    candidate_paths: list[Path] = []
+    for key in ["doc_descriptions_parquet", "doc_descriptions_jsonl"]:
+        raw = outputs.get(key)
+        if not raw:
+            continue
+        resolved = _resolve_from_workspace(str(raw), workspace_root)
+        if resolved is None:
+            continue
+        candidate_paths.append(resolved)
+
+    for path in candidate_paths:
+        if not path.exists():
+            continue
+        try:
+            desc_df = _read_rows(path)
+        except Exception:
+            continue
+
+        if "item_id" not in desc_df.columns or "description_text" not in desc_df.columns:
+            continue
+        return desc_df
+
+    return None
 
 
 def _build_display_text(row: pd.Series) -> str:
@@ -193,7 +275,11 @@ def _row_preview(
         )
 
     if modality == "image":
-        rel = str(row.get("file_path") or row.get("query_text_or_path") or row.get("content_ref") or "")
+        rel = _first_non_empty_text(
+            row.get("file_path"),
+            row.get("query_text_or_path"),
+            row.get("content_ref"),
+        )
         img_path = (workspace_root / rel).resolve()
         if img_path.exists():
             st.image(str(img_path), width=image_width)
@@ -222,12 +308,11 @@ def _row_preview(
 
 
 def _resolve_image_path(row: pd.Series, workspace_root: Path) -> tuple[str, Path] | tuple[None, None]:
-    rel = str(
-        row.get("file_path")
-        or row.get("query_text_or_path")
-        or row.get("content_ref")
-        or ""
-    ).strip()
+    rel = _first_non_empty_text(
+        row.get("file_path"),
+        row.get("query_text_or_path"),
+        row.get("content_ref"),
+    )
     if not rel:
         return None, None
 
@@ -249,8 +334,8 @@ def _truncate_text(value: str, limit: int) -> str:
 
 
 def _extract_text_preview(row: pd.Series, workspace_root: Path) -> tuple[str, str]:
-    content_ref = str(row.get("content_ref") or "")
-    file_path_raw = str(row.get("file_path") or "").strip()
+    content_ref = _first_non_empty_text(row.get("content_ref"))
+    file_path_raw = _first_non_empty_text(row.get("file_path"))
 
     full_text = ""
     if file_path_raw:
@@ -325,6 +410,31 @@ def _render_doc_gallery(
 
     if shown == 0:
         st.caption("No previewable items found for this cluster.")
+
+
+def _render_doc_description_preview(row: pd.Series, workspace_root: Path, image_width: int = 180) -> None:
+    modality = str(row.get("modality", ""))
+    item_id = str(row.get("item_id", ""))
+    category_text = str(row.get("category") or row.get("category_focus") or "")
+    st.caption(f"{item_id} | {modality} | {category_text}")
+
+    if modality == "image":
+        _, img_path = _resolve_image_path(row, workspace_root)
+        if img_path is not None:
+            st.image(str(img_path), width=image_width)
+            return
+        st.warning("Image preview unavailable")
+        return
+
+    preview, details = _extract_text_preview(row, workspace_root)
+    st.text_area(
+        "Document preview",
+        value=preview,
+        height=120,
+        disabled=True,
+        help=details,
+        key=f"doc_desc_preview_{item_id}",
+    )
 
 
 def _compute_topk(
@@ -419,6 +529,7 @@ def main() -> None:
 
         items, normalized = _prepare_items(doc_df, query_df)
         cluster_df = _load_clusters(_cluster_csv_for_run(workspace_root, run_id))
+        doc_descriptions_df = _load_doc_descriptions_from_manifest(manifest_path, workspace_root)
 
     except Exception as exc:
         st.error(f"Failed to load artifacts: {exc}")
@@ -427,16 +538,37 @@ def main() -> None:
     header_left, header_right = st.columns([4, 3])
     with header_left:
         st.markdown("### Interactive Multimodal Results Analyzer")
-        st.caption(
-            " | ".join(
-                [
-                    f"run-id: {run_id}",
-                    f"manifest: {_display_path(manifest_path, workspace_root)}",
-                    f"docs: {_display_path(docs_path, workspace_root)}",
-                    f"queries: {_display_path(queries_path, workspace_root)}",
-                ]
+        c1, c2 = st.columns(2)
+        with c1:
+            st.caption(
+                "<br>".join(
+                    [
+                        f"run-id: {run_id}",
+                        f"manifest: {_display_path(manifest_path, workspace_root)}",
+                        f"docs: {_display_path(docs_path, workspace_root)}",
+                        f"queries: {_display_path(queries_path, workspace_root)}",
+                    ]
+                ), unsafe_allow_html=True
             )
-        )
+        with c2:
+            with st.expander("Change data source", expanded=False, width=250):
+                with st.form("artifact_loader_change", border=False):
+                    if detected_run_ids:
+                        current = st.session_state["selected_run_id"]
+                        default_idx = detected_run_ids.index(current) if current in detected_run_ids else 0
+                        selected_run_id = st.selectbox(
+                            "Detected run ids",
+                            options=detected_run_ids,
+                            index=default_idx,
+                            key="run_id_change_select",
+                        )
+                        reload_button = st.form_submit_button("Reload Artifacts")
+                        if reload_button:
+                            st.session_state["selected_run_id"] = selected_run_id
+                            st.session_state["artifacts_loaded"] = True
+                            st.rerun()
+                    else:
+                        st.warning("No runs found under artifacts/embeddings.")
     with header_right:
         m1, m2, m3 = st.columns(3)
         m1.metric("Documents", int((items["item_type"] == "document").sum()))
@@ -451,26 +583,13 @@ def main() -> None:
             .nunique()
         )
         m3.metric("Categories", category_count)
-        with st.expander("Change data source", expanded=False, width=250):
-            with st.form("artifact_loader_change", border=False):
-                if detected_run_ids:
-                    current = st.session_state["selected_run_id"]
-                    default_idx = detected_run_ids.index(current) if current in detected_run_ids else 0
-                    selected_run_id = st.selectbox(
-                        "Detected run ids",
-                        options=detected_run_ids,
-                        index=default_idx,
-                        key="run_id_change_select",
-                    )
-                    reload_button = st.form_submit_button("Reload Artifacts")
-                    if reload_button:
-                        st.session_state["selected_run_id"] = selected_run_id
-                        st.session_state["artifacts_loaded"] = True
-                        st.rerun()
-                else:
-                    st.warning("No runs found under artifacts/embeddings.")
 
-    tabs = st.tabs(["Neighbor Search", "Pairwise Cosine", "Cluster Browser"])
+    tabs = st.tabs([
+        "Neighbor Search",
+        "Pairwise Cosine",
+        "Cluster Browser",
+        "Document Descriptions",
+    ])
 
     with tabs[0]:
         st.subheader("Top-k Similar Items")
@@ -602,6 +721,96 @@ def main() -> None:
                         similarity_col="cosine_to_centroid",
                         key_prefix=f"cluster_{int(cid)}",
                     )
+
+    with tabs[3]:
+        st.subheader("Document Descriptions")
+
+        if doc_descriptions_df is None:
+            st.info(
+                "This run does not contain document descriptions. "
+                "Descriptions are available in description runs (for example: desc_full), "
+                "but not in vision-language-only runs (for example: vl_full)."
+            )
+        else:
+            doc_items = items[items["item_type"] == "document"].copy()
+            desc_join_cols = ["item_id"]
+            if "description_text" in doc_descriptions_df.columns:
+                desc_join_cols.append("description_text")
+            if "description_source" in doc_descriptions_df.columns:
+                desc_join_cols.append("description_source")
+
+            desc_subset = doc_descriptions_df[desc_join_cols].copy()
+            rename_map = {}
+            if "description_text" in desc_subset.columns:
+                rename_map["description_text"] = "doc_description_text"
+            if "description_source" in desc_subset.columns:
+                rename_map["description_source"] = "doc_description_source"
+            desc_subset = desc_subset.rename(columns=rename_map)
+
+            merged_desc = doc_items.merge(desc_subset, on="item_id", how="left")
+
+            if "doc_description_text" not in merged_desc.columns:
+                merged_desc["doc_description_text"] = ""
+            merged_desc["doc_description_text"] = merged_desc["doc_description_text"].fillna("").astype(str)
+
+            if "doc_description_source" not in merged_desc.columns:
+                merged_desc["doc_description_source"] = ""
+            merged_desc["doc_description_source"] = merged_desc["doc_description_source"].fillna("").astype(str)
+
+            filter_col_a, filter_col_b = st.columns(2)
+            with filter_col_a:
+                modality_filter = st.multiselect(
+                    "Filter documents by modality",
+                    options=sorted(merged_desc["modality"].dropna().astype(str).unique().tolist()),
+                    default=sorted(merged_desc["modality"].dropna().astype(str).unique().tolist()),
+                    key="doc_desc_modality_filter",
+                )
+            with filter_col_b:
+                focus_filter = st.multiselect(
+                    "Filter documents by category focus",
+                    options=sorted(merged_desc["category_focus"].fillna("").astype(str).unique().tolist()),
+                    default=sorted(merged_desc["category_focus"].fillna("").astype(str).unique().tolist()),
+                    key="doc_desc_focus_filter",
+                )
+            source_filter = st.multiselect(
+                "Filter descriptions by source",
+                options=sorted(merged_desc["doc_description_source"].unique().tolist()),
+                default=sorted(merged_desc["doc_description_source"].unique().tolist()),
+                key="doc_desc_source_filter",
+            )
+
+            merged_desc = merged_desc[
+                merged_desc["modality"].astype(str).isin(modality_filter)
+                & merged_desc["category_focus"].fillna("").astype(str).isin(focus_filter)
+                & merged_desc["doc_description_source"].isin(source_filter)
+            ]
+            modality_order = {"image": 0, "pdf": 1, "text": 2}
+            merged_desc["_modality_rank"] = (
+                merged_desc["modality"].fillna("").astype(str).str.lower().map(modality_order).fillna(999)
+            )
+            merged_desc = merged_desc.sort_values(
+                by=["_modality_rank", "category_focus", "item_id"],
+                ascending=[True, True, True],
+            )
+            merged_desc = merged_desc.drop(columns=["_modality_rank"])
+
+            if merged_desc.empty:
+                st.info("No documents available to display.")
+            else:
+                st.caption(f"Showing {len(merged_desc)} documents")
+                for idx, (_, row) in enumerate(merged_desc.iterrows()):
+                    if idx > 0:
+                        st.divider()
+
+                    left, right = st.columns([1, 2], vertical_alignment="top")
+                    with left:
+                        _render_doc_description_preview(row, workspace_root, image_width=180)
+                    with right:
+                        text = _clean_optional_text(row.get("doc_description_text"))
+                        if text:
+                            st.write(text)
+                        else:
+                            st.caption("No description text for this document.")
 
 
 if __name__ == "__main__":
