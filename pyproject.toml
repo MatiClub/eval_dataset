@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mein-eval"
+version = "0.1.0"
+description = "Benchmark dataset tooling and multimodal embedding pipelines"
+requires-python = ">=3.11"
+dependencies = [
+  "pandas>=2.2.0",
+  "pyarrow>=15.0.0",
+  "pillow>=10.0.0",
+  "hdbscan>=0.8.33",
+  "streamlit>=1.36.0",
+  "tqdm>=4.66.0",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.0.0",
+]
+
+[tool.setuptools]
+py-modules = [
+  "image_utils",
+  "llama_embedding_demo",
+  "llama_rerank_demo",
+  "phase1_setup",
+  "pipeline_common",
+  "pipeline_desc_embed",
+  "pipeline_runner",
+  "pipeline_vl_embed",
+  "schemas",
+]
+
+[tool.setuptools.package-dir]
+"" = "src"
