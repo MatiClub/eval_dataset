@@ -1,0 +1,28 @@
+{
+  "run_id": "desc_full_lil",
+  "input": "artifacts/embeddings/desc_full_lil/desc_full_lil_doc_desc_vectors.parquet",
+  "rows": 150,
+  "vector_dim": 1024,
+  "min_cluster_size": 3,
+  "min_samples": null,
+  "cluster_selection_epsilon": 0.0,
+  "num_clusters_excluding_noise": 10,
+  "noise_points": 30,
+  "outputs": {
+    "html_report": "artifacts/clustering/desc_full_lil/desc_full_lil_hdbscan.html",
+    "csv_rows": "artifacts/clustering/desc_full_lil/desc_full_lil_hdbscan.csv",
+    "summary_json": "artifacts/clustering/desc_full_lil/desc_full_lil_hdbscan.summary.json"
+  },
+  "csv_mode": "concise",
+  "csv_include_preview": false,
+  "csv_columns": [
+    "item_id",
+    "cluster_id",
+    "membership_prob",
+    "cosine_to_centroid",
+    "category",
+    "modality",
+    "source_tag",
+    "file_path"
+  ]
+}

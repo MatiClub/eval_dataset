@@ -1,0 +1,19 @@
+{
+  "phase": "phase1",
+  "manifest_docs": 150,
+  "queries": 60,
+  "qrels_template_rows": 9000,
+  "query_image_count": 12,
+  "query_text_count": 48,
+  "output_dir": "artifacts/metadata",
+  "judgment_policy": {
+    "scale": "0-3",
+    "meaning": {
+      "0": "not relevant",
+      "1": "weakly relevant",
+      "2": "relevant",
+      "3": "highly relevant"
+    },
+    "tie_handling": "Use tie_group with same identifier for equal confidence labels."
+  }
+}

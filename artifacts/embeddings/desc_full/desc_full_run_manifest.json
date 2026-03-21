@@ -1,0 +1,32 @@
+{
+  "run_id": "desc_full",
+  "pipeline": "B_vl_description_plus_text_embedding",
+  "fake_run": false,
+  "vision_model": "Qwen.Qwen3-VL-4B-Instruct",
+  "text_embedding_model": "Qwen.Qwen3-VL-Embedding-2B",
+  "endpoint": "http://localhost:8080",
+  "prompt_version": "v1",
+  "manifest_path": "artifacts/metadata/manifest.jsonl",
+  "queries_path": "artifacts/metadata/queries.jsonl",
+  "started_at": "2026-03-20T17:13:55+00:00",
+  "finished_at": "2026-03-20T17:14:35+00:00",
+  "doc_rows_written": 150,
+  "query_rows_written": 60,
+  "mode": "embeddings-only",
+  "outputs": {
+    "doc_desc_vectors_jsonl": "artifacts/embeddings/desc_full/desc_full_doc_desc_vectors.jsonl",
+    "query_desc_vectors_jsonl": "artifacts/embeddings/desc_full/desc_full_query_desc_vectors.jsonl",
+    "doc_desc_vectors_parquet": "artifacts/embeddings/desc_full/desc_full_doc_desc_vectors.parquet",
+    "query_desc_vectors_parquet": "artifacts/embeddings/desc_full/desc_full_query_desc_vectors.parquet",
+    "embedding_checkpoint": "artifacts/embeddings/desc_full/checkpoints/desc_full.json",
+    "doc_descriptions_jsonl": "artifacts/embeddings/desc_full/desc_full_doc_descriptions.jsonl",
+    "query_descriptions_jsonl": "artifacts/embeddings/desc_full/desc_full_query_descriptions.jsonl",
+    "doc_descriptions_parquet": "artifacts/embeddings/desc_full/desc_full_doc_descriptions.parquet",
+    "query_descriptions_parquet": "artifacts/embeddings/desc_full/desc_full_query_descriptions.parquet",
+    "description_checkpoint": "artifacts/embeddings/desc_full/checkpoints/desc_full_cache.json"
+  },
+  "doc_description_rows_written": 150,
+  "query_description_rows_written": 60,
+  "doc_description_rows_reused": 150,
+  "query_description_rows_reused": 60
+}
