@@ -67,6 +67,10 @@ def _resolve_path(raw: str, workspace_root: Path) -> Path:
     return (workspace_root / p).resolve()
 
 
+def _to_workspace_relative(path: Path, workspace_root: Path) -> str:
+    return path.resolve().relative_to(workspace_root).as_posix()
+
+
 def _input_path_for_run(workspace_root: Path, run_id: str) -> Path:
     run_dir = (workspace_root / "artifacts" / "embeddings" / run_id).resolve()
     manifest_path = run_dir / f"{run_id}_run_manifest.json"
@@ -191,7 +195,7 @@ def _cluster_rows_html(frame: pd.DataFrame, preview_col: str | None, max_preview
 
 
 def _render_html(
-    input_path: Path,
+    input_display_path: str,
     output_path: Path,
     clustered: pd.DataFrame,
     cluster_sizes: pd.DataFrame,
@@ -314,7 +318,7 @@ def _render_html(
 <body>
   <main class=\"container\">
     <h1>Cosine HDBSCAN Cluster Report</h1>
-    <div class=\"meta\">input: {html.escape(input_path.as_posix())} | generated: {html.escape(generated_at)}</div>
+    <div class=\"meta\">input: {html.escape(input_display_path)} | generated: {html.escape(generated_at)}</div>
     <section class=\"cards\">
       <div class=\"card\"><div class=\"label\">Rows</div><div class=\"value\">{total}</div></div>
       <div class=\"card\"><div class=\"label\">Clusters (excl. noise)</div><div class=\"value\">{non_noise_clusters}</div></div>
@@ -453,7 +457,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     clustered_sorted.loc[:, csv_columns].to_csv(csv_path, index=False)
 
     _render_html(
-        input_path=input_path,
+        input_display_path=_to_workspace_relative(input_path, workspace_root),
         output_path=html_path,
         clustered=clustered,
         cluster_sizes=cluster_sizes,
@@ -464,7 +468,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
 
     summary = {
         "run_id": args.run_id,
-        "input": input_path.as_posix(),
+        "input": _to_workspace_relative(input_path, workspace_root),
         "rows": int(len(clustered)),
         "vector_dim": int(matrix.shape[1]),
         "min_cluster_size": int(args.min_cluster_size),
@@ -473,9 +477,9 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         "num_clusters_excluding_noise": int((cluster_sizes["cluster_id"] != -1).sum()),
         "noise_points": int((clustered["cluster_id"] == -1).sum()),
         "outputs": {
-            "html_report": html_path.as_posix(),
-            "csv_rows": csv_path.as_posix(),
-            "summary_json": json_path.as_posix(),
+            "html_report": _to_workspace_relative(html_path, workspace_root),
+            "csv_rows": _to_workspace_relative(csv_path, workspace_root),
+            "summary_json": _to_workspace_relative(json_path, workspace_root),
         },
         "csv_mode": args.csv_mode,
         "csv_include_preview": bool(args.csv_include_preview),
