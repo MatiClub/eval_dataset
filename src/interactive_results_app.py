@@ -472,6 +472,28 @@ def _load_clusters(cluster_csv_path: Path | None) -> pd.DataFrame | None:
         return None
 
 
+def _extract_model_usage_from_manifest(manifest_path: Path) -> list[str]:
+    try:
+        payload = json.loads(manifest_path.read_text(encoding="utf-8"))
+    except Exception:
+        return []
+
+    labeled: list[str] = []
+
+    embedder = _first_non_empty_text(
+        payload.get("text_embedding_model"),
+        payload.get("embedding_model"),
+    )
+    descriptor = _clean_optional_text(payload.get("vision_model"))
+
+    if embedder:
+        labeled.append(f"Embedder: {embedder}")
+    if descriptor:
+        labeled.append(f"Descriptor: {descriptor}")
+
+    return labeled
+
+
 def main() -> None:
     st.set_page_config(page_title="Interactive Multimodal Results Analyzer", layout="wide")
 
@@ -530,6 +552,7 @@ def main() -> None:
         items, normalized = _prepare_items(doc_df, query_df)
         cluster_df = _load_clusters(_cluster_csv_for_run(workspace_root, run_id))
         doc_descriptions_df = _load_doc_descriptions_from_manifest(manifest_path, workspace_root)
+        selected_model_usage = _extract_model_usage_from_manifest(manifest_path)
 
     except Exception as exc:
         st.error(f"Failed to load artifacts: {exc}")
@@ -583,6 +606,12 @@ def main() -> None:
             .nunique()
         )
         m3.metric("Categories", category_count)
+        if selected_model_usage:
+            for line in selected_model_usage:
+                st.caption(line)
+        else:
+            st.caption("Embedder: N/A")
+        
 
     tabs = st.tabs([
         "Neighbor Search",
