@@ -197,10 +197,18 @@ class RealModelProvider:
         api_key: str | None,
         timeout: float,
         retry_policy: RetryPolicy,
+        embedding_base_url: str | None = None,
+        chat_base_url: str | None = None,
     ) -> None:
         self.embedding_model = embedding_model
-        self.http = LlamaHttpClient(
-            base_url=base_url,
+        self.embedding_http = LlamaHttpClient(
+            base_url=embedding_base_url or base_url,
+            api_key=api_key,
+            timeout=timeout,
+            retry_policy=retry_policy,
+        )
+        self.chat_http = LlamaHttpClient(
+            base_url=chat_base_url or base_url,
             api_key=api_key,
             timeout=timeout,
             retry_policy=retry_policy,
@@ -212,7 +220,7 @@ class RealModelProvider:
             "input": [text],
             "encoding_format": "float",
         }
-        response = self.http.post_json("/v1/embeddings", payload)
+        response = self.embedding_http.post_json("/v1/embeddings", payload)
         vectors = response_data_to_vectors(response)
         if len(vectors) != 1:
             raise ValueError("expected exactly one embedding for text input")
@@ -231,7 +239,7 @@ class RealModelProvider:
             ],
             "encoding_format": "float",
         }
-        response = self.http.post_json("/v1/embeddings", payload)
+        response = self.embedding_http.post_json("/v1/embeddings", payload)
         vectors = response_data_to_vectors(response)
         if len(vectors) != 1:
             raise ValueError("expected exactly one embedding for image input")
@@ -253,7 +261,7 @@ class RealModelProvider:
             "temperature": 0.0,
             "max_tokens": 180,
         }
-        response = self.http.post_json("/v1/chat/completions", payload)
+        response = self.chat_http.post_json("/v1/chat/completions", payload)
         if not isinstance(response, dict):
             raise ValueError("unexpected chat response shape")
         choices = response.get("choices")

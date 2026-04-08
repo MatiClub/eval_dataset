@@ -14,7 +14,7 @@ from pipeline_common import (
 )
 from pipeline_runner import BasePhase2Pipeline
 
-DEFAULT_TEXT_EMBED_MODEL = "Qwen.Qwen3-Embedding-4B"
+DEFAULT_TEXT_EMBED_MODEL = "Qwen.Qwen3-Embedding-0.6B"
 DEFAULT_VISION_MODEL = "Qwen.Qwen3-VL-4B-Instruct"
 DEFAULT_DOC_PROMPT = (
     "Describe this document image for retrieval. Include document type, key entities, "
@@ -39,6 +39,16 @@ def parse_args() -> argparse.Namespace:
         help="execution mode: full pipeline, description cache only, or embeddings from cached descriptions",
     )
     parser.add_argument("--base-url", default="http://localhost:8080", help="llama.cpp endpoint")
+    parser.add_argument(
+        "--description-base-url",
+        default=None,
+        help="llama.cpp endpoint for image descriptions (/v1/chat/completions); defaults to --base-url",
+    )
+    parser.add_argument(
+        "--embedding-base-url",
+        default=None,
+        help="llama.cpp endpoint for text embeddings (/v1/embeddings); defaults to --base-url",
+    )
     parser.add_argument("--api-key", default=None, help="optional bearer token")
     parser.add_argument("--timeout", type=float, default=240.0, help="request timeout in seconds")
     parser.add_argument("--doc-description-prompt", default=DEFAULT_DOC_PROMPT, help="prompt for document images")
@@ -137,15 +147,30 @@ class DescriptionEmbeddingPipeline(BasePhase2Pipeline):
     def build_provider(self, args: argparse.Namespace) -> Any:
         if args.fake_run:
             return FakeModelProvider(vector_dim=args.fake_dim, seed=args.fake_seed)
+
+        description_base_url = args.description_base_url or args.base_url
+        embedding_base_url = args.embedding_base_url or args.base_url
+        mode = str(getattr(args, "mode", "full"))
+        if mode == "full" and description_base_url.rstrip("/") == embedding_base_url.rstrip("/"):
+            raise ValueError(
+                "full mode requires separate llama.cpp endpoints for descriptions and embeddings. "
+                "Set --description-base-url and --embedding-base-url to different servers/ports, "
+                "or run descriptions-only and embeddings-only as two separate steps."
+            )
+
         return RealModelProvider(
             base_url=args.base_url,
             embedding_model=DEFAULT_TEXT_EMBED_MODEL,
             api_key=args.api_key,
             timeout=args.timeout,
             retry_policy=RetryPolicy(max_attempts=args.retry_attempts, base_delay_sec=args.retry_base_delay),
+            embedding_base_url=embedding_base_url,
+            chat_base_url=description_base_url,
         )
 
     def build_run_manifest(self, args: argparse.Namespace, run_id: str) -> dict[str, Any]:
+        description_base_url = args.description_base_url or args.base_url
+        embedding_base_url = args.embedding_base_url or args.base_url
         return {
             "run_id": run_id,
             "pipeline": self.pipeline_name,
@@ -153,6 +178,8 @@ class DescriptionEmbeddingPipeline(BasePhase2Pipeline):
             "vision_model": DEFAULT_VISION_MODEL,
             "text_embedding_model": DEFAULT_TEXT_EMBED_MODEL,
             "endpoint": args.base_url,
+            "description_endpoint": description_base_url,
+            "embedding_endpoint": embedding_base_url,
             "prompt_version": "v1",
             "manifest_path": args.manifest,
             "queries_path": args.queries,
