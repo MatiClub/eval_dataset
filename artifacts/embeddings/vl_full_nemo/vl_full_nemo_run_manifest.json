@@ -1,0 +1,22 @@
+{
+  "run_id": "vl_full_nemo",
+  "pipeline": "A_vl_only",
+  "fake_run": false,
+  "embedding_model": "nvidia/llama-nemotron-embed-vl-1b-v2:free",
+  "endpoint": "https://openrouter.ai/api",
+  "image_prompt": "Represent this image for retrieval:",
+  "manifest_path": "artifacts/metadata/manifest.jsonl",
+  "queries_path": "artifacts/metadata/queries.jsonl",
+  "started_at": "2026-05-31T14:04:22+00:00",
+  "finished_at": "2026-05-31T14:05:51+00:00",
+  "doc_rows_written": 150,
+  "query_rows_written": 60,
+  "mode": "full",
+  "outputs": {
+    "doc_vectors_jsonl": "artifacts/embeddings/vl_full_nemo/vl_full_nemo_doc_vectors.jsonl",
+    "query_vectors_jsonl": "artifacts/embeddings/vl_full_nemo/vl_full_nemo_query_vectors.jsonl",
+    "doc_vectors_parquet": "artifacts/embeddings/vl_full_nemo/vl_full_nemo_doc_vectors.parquet",
+    "query_vectors_parquet": "artifacts/embeddings/vl_full_nemo/vl_full_nemo_query_vectors.parquet",
+    "checkpoint": "artifacts/embeddings/vl_full_nemo/checkpoints/vl_full_nemo.json"
+  }
+}

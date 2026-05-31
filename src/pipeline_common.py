@@ -227,16 +227,32 @@ class RealModelProvider:
         return vectors[0]
 
     def embed_image(self, image_path: Path, prompt_prefix: str) -> list[float]:
-        binary = prepare_image_bytes_for_model(image_path=image_path, model=self.embedding_model)
+        binary = prepare_image_bytes_for_model(
+            image_path=image_path, model=self.embedding_model
+        )
         b64 = base64.b64encode(binary).decode("ascii")
-        payload = {
-            "model": self.embedding_model,
-            "input": [
+        if "openrouter.ai" in self.embedding_http.base_url:
+            input_data = [
+                {
+                    "content": [
+                        {"type": "text", "text": prompt_prefix},
+                        {
+                            "type": "image_url",
+                            "image_url": {"url": "data:image/png;base64," + b64},
+                        },
+                    ]
+                }
+            ]
+        else:  # llama.cpp
+            input_data = [
                 {
                     "prompt_string": f"{prompt_prefix} {MULTIMODAL_MARKER}",
                     "multimodal_data": [b64],
                 }
-            ],
+            ]
+        payload = {
+            "model": self.embedding_model,
+            "input": input_data,
             "encoding_format": "float",
         }
         response = self.embedding_http.post_json("/v1/embeddings", payload)
