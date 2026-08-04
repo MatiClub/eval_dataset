@@ -2,59 +2,99 @@
 {"query_id": "q_0002", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "show documents with pets", "category_focus": "animal"}
 {"query_id": "q_0003", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "images with cats or dogs", "category_focus": "animal"}
 {"query_id": "q_0004", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "animal picture examples", "category_focus": "animal"}
-{"query_id": "q_0005", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "photos of cars", "category_focus": "car"}
-{"query_id": "q_0006", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "vehicle images", "category_focus": "car"}
-{"query_id": "q_0007", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "automobile pictures", "category_focus": "car"}
-{"query_id": "q_0008", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "car-related photos", "category_focus": "car"}
-{"query_id": "q_0009", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "diploma or certificate image", "category_focus": "diploma"}
-{"query_id": "q_0010", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "award certificate photo", "category_focus": "diploma"}
-{"query_id": "q_0011", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "school diploma document", "category_focus": "diploma"}
-{"query_id": "q_0012", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "certificate style page", "category_focus": "diploma"}
-{"query_id": "q_0013", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "food image", "category_focus": "food"}
-{"query_id": "q_0014", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "dish photo", "category_focus": "food"}
-{"query_id": "q_0015", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "meal picture", "category_focus": "food"}
-{"query_id": "q_0016", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "something edible shown in image", "category_focus": "food"}
-{"query_id": "q_0017", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "recipe instructions text", "category_focus": "food_recipe"}
-{"query_id": "q_0018", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "cooking recipe document", "category_focus": "food_recipe"}
-{"query_id": "q_0019", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "ingredients and cooking steps", "category_focus": "food_recipe"}
-{"query_id": "q_0020", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "text about preparing food", "category_focus": "food_recipe"}
-{"query_id": "q_0021", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "id card or passport photo", "category_focus": "identity"}
-{"query_id": "q_0022", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "identity document image", "category_focus": "identity"}
-{"query_id": "q_0023", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "personal identification card", "category_focus": "identity"}
-{"query_id": "q_0024", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "passport scan-like photo", "category_focus": "identity"}
-{"query_id": "q_0025", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "invoice document image", "category_focus": "invoice"}
-{"query_id": "q_0026", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "billing invoice", "category_focus": "invoice"}
-{"query_id": "q_0027", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "payment request document", "category_focus": "invoice"}
-{"query_id": "q_0028", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "commercial invoice page", "category_focus": "invoice"}
-{"query_id": "q_0029", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "medical test or report image", "category_focus": "medical"}
-{"query_id": "q_0030", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "health record document", "category_focus": "medical"}
-{"query_id": "q_0031", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "clinical result picture", "category_focus": "medical"}
-{"query_id": "q_0032", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "medical paperwork", "category_focus": "medical"}
-{"query_id": "q_0033", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "shopping receipt image", "category_focus": "receipt"}
-{"query_id": "q_0034", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "point of sale receipt", "category_focus": "receipt"}
-{"query_id": "q_0035", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "cash register receipt", "category_focus": "receipt"}
-{"query_id": "q_0036", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "purchase receipt paper", "category_focus": "receipt"}
-{"query_id": "q_0037", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "course syllabus document", "category_focus": "syllabus"}
-{"query_id": "q_0038", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "academic course outline", "category_focus": "syllabus"}
-{"query_id": "q_0039", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "university syllabus pdf", "category_focus": "syllabus"}
-{"query_id": "q_0040", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "class plan document", "category_focus": "syllabus"}
-{"query_id": "q_0041", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "warranty card or paper", "category_focus": "warranty"}
-{"query_id": "q_0042", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "guarantee document image", "category_focus": "warranty"}
-{"query_id": "q_0043", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "product warranty sheet", "category_focus": "warranty"}
-{"query_id": "q_0044", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "proof of warranty image", "category_focus": "warranty"}
-{"query_id": "q_0045", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "find items related to warranty", "category_focus": "warranty"}
-{"query_id": "q_0046", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "find items related to animal", "category_focus": "animal"}
-{"query_id": "q_0047", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "find items related to car", "category_focus": "car"}
-{"query_id": "q_0048", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "find items related to diploma", "category_focus": "diploma"}
-{"query_id": "q_0049", "query_modality": "image", "query_source": "existing_doc_image", "query_text_or_path": "data/animal-photo/5.jpeg", "category_focus": "animal"}
-{"query_id": "q_0050", "query_modality": "image", "query_source": "existing_doc_image", "query_text_or_path": "data/animal-photo/6.jpeg", "category_focus": "animal"}
-{"query_id": "q_0051", "query_modality": "image", "query_source": "existing_doc_image", "query_text_or_path": "data/animal-photo/OIP---MGqQIhmz3OEPYP-46_xwHaFj.jpeg", "category_focus": "animal"}
-{"query_id": "q_0052", "query_modality": "image", "query_source": "existing_doc_image", "query_text_or_path": "data/animal-photo/OIP---sK_NCo5VFiDavIY-pUdgHaFB.jpeg", "category_focus": "animal"}
-{"query_id": "q_0053", "query_modality": "image", "query_source": "existing_doc_image", "query_text_or_path": "data/animal-photo/OIP--1hNp1smpwT06GTxZbUVwgHaFi.jpeg", "category_focus": "animal"}
-{"query_id": "q_0054", "query_modality": "image", "query_source": "existing_doc_image", "query_text_or_path": "data/animal-photo/OIP--2wbTZUIHhYse3zlp1S4WQHaJ3.jpeg", "category_focus": "animal"}
-{"query_id": "q_0055", "query_modality": "image", "query_source": "existing_doc_image", "query_text_or_path": "data/animal-photo/OIP--5YhTv41EQikJq2qdaMQ0AHaF8.jpeg", "category_focus": "animal"}
-{"query_id": "q_0056", "query_modality": "image", "query_source": "existing_doc_image", "query_text_or_path": "data/animal-photo/OIP--DTVnqj-HKjAEvLxZyOYGQHaFP.jpeg", "category_focus": "animal"}
-{"query_id": "q_0057", "query_modality": "image", "query_source": "existing_doc_image", "query_text_or_path": "data/animal-photo/OIP--e77uBraw9yR8NL4ATG1TAHaE8.jpeg", "category_focus": "animal"}
-{"query_id": "q_0058", "query_modality": "image", "query_source": "existing_doc_image", "query_text_or_path": "data/animal-photo/OIP--jr8OiL18jgRMtRJts69ugHaFj.jpeg", "category_focus": "animal"}
-{"query_id": "q_0059", "query_modality": "image", "query_source": "existing_doc_image", "query_text_or_path": "data/animal-photo/OIP-0FHHBZQRsahkBa3TGgOA1QHaE8.jpeg", "category_focus": "animal"}
-{"query_id": "q_0060", "query_modality": "image", "query_source": "existing_doc_image", "query_text_or_path": "data/animal-photo/PMD-pet_photo-0001.jpg", "category_focus": "animal"}
+{"query_id": "q_0005", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "bank account statement", "category_focus": "bank_statement"}
+{"query_id": "q_0006", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "list of account transactions", "category_focus": "bank_statement"}
+{"query_id": "q_0007", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "monthly banking statement page", "category_focus": "bank_statement"}
+{"query_id": "q_0008", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "document with IBAN and balance", "category_focus": "bank_statement"}
+{"query_id": "q_0009", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "business card image", "category_focus": "business_card"}
+{"query_id": "q_0010", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "contact card with name and phone", "category_focus": "business_card"}
+{"query_id": "q_0011", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "company card of an employee", "category_focus": "business_card"}
+{"query_id": "q_0012", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "professional visiting card", "category_focus": "business_card"}
+{"query_id": "q_0013", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "photos of cars", "category_focus": "car"}
+{"query_id": "q_0014", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "vehicle images", "category_focus": "car"}
+{"query_id": "q_0015", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "automobile pictures", "category_focus": "car"}
+{"query_id": "q_0016", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "car-related photos", "category_focus": "car"}
+{"query_id": "q_0017", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "signed contract document", "category_focus": "contract"}
+{"query_id": "q_0018", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "legal agreement page", "category_focus": "contract"}
+{"query_id": "q_0019", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "lease or employment agreement", "category_focus": "contract"}
+{"query_id": "q_0020", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "umowa najmu lub zlecenie", "category_focus": "contract"}
+{"query_id": "q_0021", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "diploma or certificate image", "category_focus": "diploma"}
+{"query_id": "q_0022", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "award certificate photo", "category_focus": "diploma"}
+{"query_id": "q_0023", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "school diploma document", "category_focus": "diploma"}
+{"query_id": "q_0024", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "certificate style page", "category_focus": "diploma"}
+{"query_id": "q_0025", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "food image", "category_focus": "food"}
+{"query_id": "q_0026", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "dish photo", "category_focus": "food"}
+{"query_id": "q_0027", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "meal picture", "category_focus": "food"}
+{"query_id": "q_0028", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "something edible shown in image", "category_focus": "food"}
+{"query_id": "q_0029", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "recipe instructions text", "category_focus": "food_recipe"}
+{"query_id": "q_0030", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "cooking recipe document", "category_focus": "food_recipe"}
+{"query_id": "q_0031", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "ingredients and cooking steps", "category_focus": "food_recipe"}
+{"query_id": "q_0032", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "text about preparing food", "category_focus": "food_recipe"}
+{"query_id": "q_0033", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "filled application form", "category_focus": "form"}
+{"query_id": "q_0034", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "registration form document", "category_focus": "form"}
+{"query_id": "q_0035", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "form with fields and boxes", "category_focus": "form"}
+{"query_id": "q_0036", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "official application paperwork", "category_focus": "form"}
+{"query_id": "q_0037", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "id card or passport photo", "category_focus": "identity"}
+{"query_id": "q_0038", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "identity document image", "category_focus": "identity"}
+{"query_id": "q_0039", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "personal identification card", "category_focus": "identity"}
+{"query_id": "q_0040", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "passport scan-like photo", "category_focus": "identity"}
+{"query_id": "q_0041", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "invoice document image", "category_focus": "invoice"}
+{"query_id": "q_0042", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "billing invoice", "category_focus": "invoice"}
+{"query_id": "q_0043", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "payment request document", "category_focus": "invoice"}
+{"query_id": "q_0044", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "commercial invoice page", "category_focus": "invoice"}
+{"query_id": "q_0045", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "formal letter text", "category_focus": "letter"}
+{"query_id": "q_0046", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "official correspondence document", "category_focus": "letter"}
+{"query_id": "q_0047", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "complaint or resignation letter", "category_focus": "letter"}
+{"query_id": "q_0048", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "pismo lub list formalny", "category_focus": "letter"}
+{"query_id": "q_0049", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "medical test or report image", "category_focus": "medical"}
+{"query_id": "q_0050", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "health record document", "category_focus": "medical"}
+{"query_id": "q_0051", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "clinical result picture", "category_focus": "medical"}
+{"query_id": "q_0052", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "medical paperwork", "category_focus": "medical"}
+{"query_id": "q_0053", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "handwritten note photo", "category_focus": "note"}
+{"query_id": "q_0054", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "personal to-do list on paper", "category_focus": "note"}
+{"query_id": "q_0055", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "quick reminder note", "category_focus": "note"}
+{"query_id": "q_0056", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "notes scribbled on lined paper", "category_focus": "note"}
+{"query_id": "q_0057", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "presentation slide image", "category_focus": "presentation"}
+{"query_id": "q_0058", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "slide with title and bullet points", "category_focus": "presentation"}
+{"query_id": "q_0059", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "corporate deck slide", "category_focus": "presentation"}
+{"query_id": "q_0060", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "meeting presentation page", "category_focus": "presentation"}
+{"query_id": "q_0061", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "shopping receipt image", "category_focus": "receipt"}
+{"query_id": "q_0062", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "point of sale receipt", "category_focus": "receipt"}
+{"query_id": "q_0063", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "cash register receipt", "category_focus": "receipt"}
+{"query_id": "q_0064", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "purchase receipt paper", "category_focus": "receipt"}
+{"query_id": "q_0065", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "application screenshot", "category_focus": "screenshot"}
+{"query_id": "q_0066", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "screenshot of a software interface", "category_focus": "screenshot"}
+{"query_id": "q_0067", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "app window with sidebar and list", "category_focus": "screenshot"}
+{"query_id": "q_0068", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "dashboard user interface capture", "category_focus": "screenshot"}
+{"query_id": "q_0069", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "spreadsheet with a data table", "category_focus": "spreadsheet"}
+{"query_id": "q_0070", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "excel style table of numbers", "category_focus": "spreadsheet"}
+{"query_id": "q_0071", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "budget or sales table", "category_focus": "spreadsheet"}
+{"query_id": "q_0072", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "tabular data grid image", "category_focus": "spreadsheet"}
+{"query_id": "q_0073", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "course syllabus document", "category_focus": "syllabus"}
+{"query_id": "q_0074", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "academic course outline", "category_focus": "syllabus"}
+{"query_id": "q_0075", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "university syllabus pdf", "category_focus": "syllabus"}
+{"query_id": "q_0076", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "class plan document", "category_focus": "syllabus"}
+{"query_id": "q_0077", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "warranty card or paper", "category_focus": "warranty"}
+{"query_id": "q_0078", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "guarantee document image", "category_focus": "warranty"}
+{"query_id": "q_0079", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "product warranty sheet", "category_focus": "warranty"}
+{"query_id": "q_0080", "query_modality": "text", "query_source": "template_v1", "query_text_or_path": "proof of warranty image", "category_focus": "warranty"}
+{"query_id": "q_0081", "query_modality": "image", "query_source": "existing_doc_image", "query_text_or_path": "data/animal-photo/5.jpeg", "category_focus": "animal"}
+{"query_id": "q_0082", "query_modality": "image", "query_source": "existing_doc_image", "query_text_or_path": "data/bank_statement-photo/SYN-statement-0001.jpg", "category_focus": "bank_statement"}
+{"query_id": "q_0083", "query_modality": "image", "query_source": "existing_doc_image", "query_text_or_path": "data/business_card-photo/SYN-card-0001.jpg", "category_focus": "business_card"}
+{"query_id": "q_0084", "query_modality": "image", "query_source": "existing_doc_image", "query_text_or_path": "data/car-photo/PMD-car_photo-0001.jpg", "category_focus": "car"}
+{"query_id": "q_0085", "query_modality": "image", "query_source": "existing_doc_image", "query_text_or_path": "data/contract-photo/SYN-contract-0001.jpg", "category_focus": "contract"}
+{"query_id": "q_0086", "query_modality": "image", "query_source": "existing_doc_image", "query_text_or_path": "data/diploma-photo/625349231_1503334948458785_8918976821722731327_n.jpg", "category_focus": "diploma"}
+{"query_id": "q_0087", "query_modality": "image", "query_source": "existing_doc_image", "query_text_or_path": "data/food-photo/HARD-lowres-PMD-food_photo-0001.jpg", "category_focus": "food"}
+{"query_id": "q_0088", "query_modality": "image", "query_source": "existing_doc_image", "query_text_or_path": "data/form-photo/SYN-form-0001.jpg", "category_focus": "form"}
+{"query_id": "q_0089", "query_modality": "image", "query_source": "existing_doc_image", "query_text_or_path": "data/identity-photo/HARD-blur-est_id_22.jpg", "category_focus": "identity"}
+{"query_id": "q_0090", "query_modality": "image", "query_source": "existing_doc_image", "query_text_or_path": "data/invoice-photo/HARD-blur-Invoice_22.jpg", "category_focus": "invoice"}
+{"query_id": "q_0091", "query_modality": "image", "query_source": "existing_doc_image", "query_text_or_path": "data/medical-photo/1_5.jpg", "category_focus": "medical"}
+{"query_id": "q_0092", "query_modality": "image", "query_source": "existing_doc_image", "query_text_or_path": "data/note-photo/SYN-note-0001.jpg", "category_focus": "note"}
+{"query_id": "q_0093", "query_modality": "image", "query_source": "existing_doc_image", "query_text_or_path": "data/presentation-photo/SYN-slide-0001.jpg", "category_focus": "presentation"}
+{"query_id": "q_0094", "query_modality": "image", "query_source": "existing_doc_image", "query_text_or_path": "data/receipt-photo/1000-receipt.jpg", "category_focus": "receipt"}
+{"query_id": "q_0095", "query_modality": "image", "query_source": "existing_doc_image", "query_text_or_path": "data/screenshot-photo/SYN-screen-0001.jpg", "category_focus": "screenshot"}
+{"query_id": "q_0096", "query_modality": "image", "query_source": "existing_doc_image", "query_text_or_path": "data/spreadsheet-photo/SYN-sheet-0001.jpg", "category_focus": "spreadsheet"}
+{"query_id": "q_0097", "query_modality": "image", "query_source": "existing_doc_image", "query_text_or_path": "data/warranty-photo/080d61650378d79afcbe17b08b4b11c4.jpg", "category_focus": "warranty"}
+{"query_id": "q_0098", "query_modality": "image", "query_source": "existing_doc_image", "query_text_or_path": "data/animal-photo/6.jpeg", "category_focus": "animal"}
+{"query_id": "q_0099", "query_modality": "image", "query_source": "existing_doc_image", "query_text_or_path": "data/bank_statement-photo/SYN-statement-0002.jpg", "category_focus": "bank_statement"}
+{"query_id": "q_0100", "query_modality": "image", "query_source": "existing_doc_image", "query_text_or_path": "data/business_card-photo/SYN-card-0002.jpg", "category_focus": "business_card"}

@@ -82,6 +82,60 @@ TEXT_QUERY_TEMPLATES = {
         "product warranty sheet",
         "proof of warranty image",
     ],
+    "contract": [
+        "signed contract document",
+        "legal agreement page",
+        "lease or employment agreement",
+        "umowa najmu lub zlecenie",
+    ],
+    "bank_statement": [
+        "bank account statement",
+        "list of account transactions",
+        "monthly banking statement page",
+        "document with IBAN and balance",
+    ],
+    "form": [
+        "filled application form",
+        "registration form document",
+        "form with fields and boxes",
+        "official application paperwork",
+    ],
+    "business_card": [
+        "business card image",
+        "contact card with name and phone",
+        "company card of an employee",
+        "professional visiting card",
+    ],
+    "presentation": [
+        "presentation slide image",
+        "slide with title and bullet points",
+        "corporate deck slide",
+        "meeting presentation page",
+    ],
+    "spreadsheet": [
+        "spreadsheet with a data table",
+        "excel style table of numbers",
+        "budget or sales table",
+        "tabular data grid image",
+    ],
+    "screenshot": [
+        "application screenshot",
+        "screenshot of a software interface",
+        "app window with sidebar and list",
+        "dashboard user interface capture",
+    ],
+    "note": [
+        "handwritten note photo",
+        "personal to-do list on paper",
+        "quick reminder note",
+        "notes scribbled on lined paper",
+    ],
+    "letter": [
+        "formal letter text",
+        "official correspondence document",
+        "complaint or resignation letter",
+        "pismo lub list formalny",
+    ],
 }
 
 
@@ -90,7 +144,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--workspace-root", default=".", help="workspace root path")
     parser.add_argument("--data-dir", default="data", help="source data directory")
     parser.add_argument("--output-dir", default="artifacts/metadata", help="output artifact directory")
-    parser.add_argument("--query-count", type=int, default=60, help="total number of queries to generate")
+    parser.add_argument("--query-count", type=int, default=100, help="total number of queries to generate")
     parser.add_argument(
         "--image-query-ratio",
         type=float,
@@ -250,9 +304,21 @@ def build_queries(
         rows.append(row)
         q_idx += 1
 
-    selected_images = image_docs[:image_target]
+    # Round-robin across categories so image queries are not dominated by
+    # whichever category sorts first in the manifest.
+    docs_by_category: dict[str, list[ManifestRow]] = {}
+    for doc in image_docs:
+        docs_by_category.setdefault(doc.category, []).append(doc)
+    image_categories = sorted(docs_by_category)
+    selected_images: list[ManifestRow] = []
+    round_idx = 0
     while len(selected_images) < image_target and image_docs:
-        selected_images.append(image_docs[len(selected_images) % len(image_docs)])
+        for category in image_categories:
+            if len(selected_images) >= image_target:
+                break
+            bucket = docs_by_category[category]
+            selected_images.append(bucket[round_idx % len(bucket)])
+        round_idx += 1
 
     for doc in selected_images:
         row = QueryRow(
