@@ -141,6 +141,33 @@ class RetryPolicy:
     base_delay_sec: float = 1.0
 
 
+class ProviderStats:
+    """Accumulates per-operation latency so runs can be compared on cost, not just quality."""
+
+    def __init__(self) -> None:
+        self._ops: dict[str, dict[str, float]] = {}
+        self.vector_dim: int | None = None
+
+    def record(self, op: str, elapsed_sec: float) -> None:
+        entry = self._ops.setdefault(op, {"calls": 0.0, "total_sec": 0.0})
+        entry["calls"] += 1
+        entry["total_sec"] += elapsed_sec
+
+    def record_vector(self, vector: Sequence[float]) -> None:
+        if self.vector_dim is None:
+            self.vector_dim = len(vector)
+
+    def summary(self) -> dict[str, Any]:
+        out: dict[str, Any] = {"vector_dim": self.vector_dim}
+        for op, entry in sorted(self._ops.items()):
+            calls = int(entry["calls"])
+            total = entry["total_sec"]
+            out[f"{op}_calls"] = calls
+            out[f"{op}_total_sec"] = round(total, 3)
+            out[f"{op}_avg_sec"] = round(total / calls, 4) if calls else None
+        return out
+
+
 class LlamaHttpClient:
     def __init__(
         self,
@@ -201,6 +228,7 @@ class RealModelProvider:
         chat_base_url: str | None = None,
     ) -> None:
         self.embedding_model = embedding_model
+        self.stats = ProviderStats()
         self.embedding_http = LlamaHttpClient(
             base_url=embedding_base_url or base_url,
             api_key=api_key,
@@ -220,10 +248,13 @@ class RealModelProvider:
             "input": [text],
             "encoding_format": "float",
         }
+        started = time.perf_counter()
         response = self.embedding_http.post_json("/v1/embeddings", payload)
+        self.stats.record("embed_text", time.perf_counter() - started)
         vectors = response_data_to_vectors(response)
         if len(vectors) != 1:
             raise ValueError("expected exactly one embedding for text input")
+        self.stats.record_vector(vectors[0])
         return vectors[0]
 
     def embed_image(self, image_path: Path, prompt_prefix: str) -> list[float]:
@@ -255,10 +286,13 @@ class RealModelProvider:
             "input": input_data,
             "encoding_format": "float",
         }
+        started = time.perf_counter()
         response = self.embedding_http.post_json("/v1/embeddings", payload)
+        self.stats.record("embed_image", time.perf_counter() - started)
         vectors = response_data_to_vectors(response)
         if len(vectors) != 1:
             raise ValueError("expected exactly one embedding for image input")
+        self.stats.record_vector(vectors[0])
         return vectors[0]
 
     def describe_image(self, image_path: Path, vision_model: str, prompt_text: str) -> str:
@@ -277,7 +311,9 @@ class RealModelProvider:
             "temperature": 0.0,
             "max_tokens": 180,
         }
+        started = time.perf_counter()
         response = self.chat_http.post_json("/v1/chat/completions", payload)
+        self.stats.record("describe_image", time.perf_counter() - started)
         if not isinstance(response, dict):
             raise ValueError("unexpected chat response shape")
         choices = response.get("choices")
@@ -297,6 +333,7 @@ class FakeModelProvider:
             raise ValueError("vector_dim must be > 0")
         self.vector_dim = vector_dim
         self.seed = seed
+        self.stats = ProviderStats()
 
     def _rng(self, key: str) -> random.Random:
         digest = hashlib.sha256(f"{self.seed}:{key}".encode("utf-8")).hexdigest()
@@ -347,15 +384,25 @@ class FakeModelProvider:
         return " ".join(words) + "."
 
     def embed_text(self, text: str) -> list[float]:
-        return self._make_vector(f"text:{text}")
+        started = time.perf_counter()
+        vector = self._make_vector(f"text:{text}")
+        self.stats.record("embed_text", time.perf_counter() - started)
+        self.stats.record_vector(vector)
+        return vector
 
     def embed_image(self, image_path: Path, prompt_prefix: str) -> list[float]:
-        key = f"image:{image_path.as_posix()}:{prompt_prefix}"
-        return self._make_vector(key)
+        started = time.perf_counter()
+        vector = self._make_vector(f"image:{image_path.as_posix()}:{prompt_prefix}")
+        self.stats.record("embed_image", time.perf_counter() - started)
+        self.stats.record_vector(vector)
+        return vector
 
     def describe_image(self, image_path: Path, vision_model: str, prompt_text: str) -> str:
+        started = time.perf_counter()
         key = f"{vision_model}:{image_path.as_posix()}:{prompt_text}"
-        return self._make_words(key)
+        words = self._make_words(key)
+        self.stats.record("describe_image", time.perf_counter() - started)
+        return words
 
 
 class CheckpointStore:

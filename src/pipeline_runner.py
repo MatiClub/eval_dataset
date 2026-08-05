@@ -423,6 +423,9 @@ class BasePhase2Pipeline(ABC):
             jsonl_to_parquet(queries_jsonl, queries_parquet)
 
         run_manifest["finished_at"] = now_utc_iso()
+        stats = getattr(provider, "stats", None)
+        if stats is not None:
+            run_manifest["cost_stats"] = stats.summary()
         run_manifest["doc_rows_written"] = jsonl_row_count(docs_jsonl)
         run_manifest["query_rows_written"] = jsonl_row_count(queries_jsonl)
         outputs = self.output_paths_for_manifest(

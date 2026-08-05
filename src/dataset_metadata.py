@@ -7,7 +7,7 @@ from dataclasses import asdict
 from pathlib import Path
 from typing import Any
 
-from schemas import ManifestRow, QrelRow, QueryRow
+from schemas import ManifestRow, QueryRow
 
 
 TEXT_EXTENSIONS = {".txt"}
@@ -339,25 +339,6 @@ def build_queries(
     return rows[:total_queries]
 
 
-def build_qrels_template(queries: list[QueryRow], manifest: list[ManifestRow]) -> list[QrelRow]:
-    rows: list[QrelRow] = []
-    for query in queries:
-        for doc in manifest:
-            rows.append(
-                QrelRow(
-                    query_id=query.query_id,
-                    doc_id=doc.doc_id,
-                    relevance_grade=None,
-                    annotation_notes="",
-                    tie_group=None,
-                )
-            )
-
-    for row in rows:
-        row.validate()
-    return rows
-
-
 def _write_json(path: Path, payload: Any) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", encoding="utf-8") as handle:
@@ -384,34 +365,19 @@ def run_phase1(args: argparse.Namespace) -> None:
         total_queries=args.query_count,
         image_ratio=args.image_query_ratio,
     )
-    qrels = build_qrels_template(queries=queries, manifest=manifest)
-
     manifest_rows = [asdict(row) for row in manifest]
     query_rows = [asdict(row) for row in queries]
-    qrel_rows = [asdict(row) for row in qrels]
 
     _write_jsonl(output_dir / "manifest.jsonl", manifest_rows)
     _write_jsonl(output_dir / "queries.jsonl", query_rows)
-    _write_jsonl(output_dir / "qrels_template.jsonl", qrel_rows)
 
     summary = {
         "phase": "phase1",
         "manifest_docs": len(manifest_rows),
         "queries": len(query_rows),
-        "qrels_template_rows": len(qrel_rows),
         "query_image_count": sum(1 for row in query_rows if row["query_modality"] == "image"),
         "query_text_count": sum(1 for row in query_rows if row["query_modality"] == "text"),
         "output_dir": output_dir.relative_to(workspace_root).as_posix(),
-        "judgment_policy": {
-            "scale": "0-3",
-            "meaning": {
-                "0": "not relevant",
-                "1": "weakly relevant",
-                "2": "relevant",
-                "3": "highly relevant",
-            },
-            "tie_handling": "Use tie_group with same identifier for equal confidence labels.",
-        },
     }
     _write_json(output_dir / "phase1_summary.json", summary)
     print(json.dumps(summary, indent=2))
