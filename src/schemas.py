@@ -60,18 +60,3 @@ class QueryRow:
             absolute = workspace_root / self.query_text_or_path
             if not absolute.exists():
                 raise ValueError(f"Image query path does not exist: {self.query_text_or_path}")
-
-
-@dataclass(frozen=True)
-class QrelRow:
-    query_id: str
-    doc_id: str
-    relevance_grade: int | None
-    annotation_notes: str
-    tie_group: str | None
-
-    def validate(self) -> None:
-        _ensure_not_empty(self.query_id, "query_id")
-        _ensure_not_empty(self.doc_id, "doc_id")
-        if self.relevance_grade is not None and self.relevance_grade not in {0, 1, 2, 3}:
-            raise ValueError(f"Invalid relevance_grade: {self.relevance_grade}")

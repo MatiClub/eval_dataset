@@ -20,6 +20,11 @@ dependencies = [
 dev = [
   "pytest>=8.0.0",
 ]
+prep = [
+  "fpdf2>=2.7.0",
+  "numpy>=1.26.0",
+  "pypdf>=4.0.0",
+]
 
 [tool.setuptools]
 py-modules = [
